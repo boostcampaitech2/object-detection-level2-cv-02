@@ -1,3 +1,4 @@
+import datetime
 import argparse
 import collections
 import torch
@@ -9,7 +10,6 @@ import model.model as module_arch
 from parse_config import ConfigParser
 from trainer import Trainer
 from utils import prepare_device
-
 
 # fix random seeds for reproducibility
 SEED = 123
@@ -90,6 +90,12 @@ if __name__ == "__main__":
         CustomArgs(["--lr", "--learning_rate"], type=float, target="optimizer;args;lr"),
         CustomArgs(
             ["--bs", "--batch_size"], type=int, target="data_loader;args;batch_size"
+        ),
+        CustomArgs(
+            ["--ut", "--unique_tag"],
+            default=str(datetime.datetime.now()),
+            type=str,
+            target="wandb;unique_tag",
         ),
     ]
     config = ConfigParser.from_args(args, options)

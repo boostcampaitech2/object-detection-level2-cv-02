@@ -1,5 +1,11 @@
 {
     "name": "Mnist_LeNet",
+    "wandb": {
+        "env_path": "./.env",
+        "entity": "boostcamp-2th-cv-02team",
+        "project": "object-detection-recycling-trash",
+        "unique_tag": ""
+    },
     "n_gpu": 1,
     "arch": {
         "type": "MnistModel",

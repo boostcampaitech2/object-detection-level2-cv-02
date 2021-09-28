@@ -2,7 +2,7 @@ import numpy as np
 import torch
 from torchvision.utils import make_grid
 from base import BaseTrainer
-from utils import inf_loop, MetricTracker
+from utils import inf_loop, MetricTracker, Wandb
 
 
 class Trainer(BaseTrainer):
@@ -25,6 +25,7 @@ class Trainer(BaseTrainer):
     ):
         super().__init__(model, criterion, metric_ftns, optimizer, config)
         self.config = config
+        self.Wandb = Wandb(self.config)
         self.device = device
         self.data_loader = data_loader
         if len_epoch is None:
@@ -38,7 +39,6 @@ class Trainer(BaseTrainer):
         self.do_validation = self.valid_data_loader is not None
         self.lr_scheduler = lr_scheduler
         self.log_step = int(np.sqrt(data_loader.batch_size))
-
         self.train_metrics = MetricTracker(
             "loss", *[m.__name__ for m in self.metric_ftns], writer=self.writer
         )
