@@ -70,9 +70,7 @@ class ConfigParser:
             config.update(read_json(args.config))
 
         # parse custom cli options into dictionary
-        modification = {
-            opt.target: getattr(args, _get_opt_name(opt.flags)) for opt in options
-        }
+        modification = {opt.target: getattr(args, _get_opt_name(opt.flags)) for opt in options}
         return cls(config, resume, modification)
 
     def init_obj(self, name, module, *args, **kwargs):
@@ -86,9 +84,7 @@ class ConfigParser:
         """
         module_name = self[name]["type"]
         module_args = dict(self[name]["args"])
-        assert all(
-            [k not in module_args for k in kwargs]
-        ), "Overwriting kwargs given in config file is not allowed"
+        assert all([k not in module_args for k in kwargs]), "Overwriting kwargs given in config file is not allowed"
         module_args.update(kwargs)
         return getattr(module, module_name)(*args, **module_args)
 
@@ -103,9 +99,7 @@ class ConfigParser:
         """
         module_name = self[name]["type"]
         module_args = dict(self[name]["args"])
-        assert all(
-            [k not in module_args for k in kwargs]
-        ), "Overwriting kwargs given in config file is not allowed"
+        assert all([k not in module_args for k in kwargs]), "Overwriting kwargs given in config file is not allowed"
         module_args.update(kwargs)
         return partial(getattr(module, module_name), *args, **module_args)
 

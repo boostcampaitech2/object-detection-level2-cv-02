@@ -62,12 +62,7 @@ def main(config):
 
     n_samples = len(data_loader.sampler)
     log = {"loss": total_loss / n_samples}
-    log.update(
-        {
-            met.__name__: total_metrics[i].item() / n_samples
-            for i, met in enumerate(metric_fns)
-        }
-    )
+    log.update({met.__name__: total_metrics[i].item() / n_samples for i, met in enumerate(metric_fns)})
     logger.info(log)
 
 
