@@ -1,4 +1,5 @@
 import os
+import datetime
 import wandb
 from dotenv import load_dotenv
 
@@ -10,10 +11,12 @@ class Wandb:
         """
         self.config = config
         self.wandb_config = config["wandb"]
-        self.unique_tag = self.wandb_config["unique_tag"]
+        self.unique_tag = (
+            self.wandb_config["unique_tag"] if self.wandb_config["unique_tag"] == "" else str(datetime.datetime.now())
+        )
+
         self.entity = self.wandb_config["entity"]
         self.project = self.wandb_config["project"]
-
         dotenv_path = self.wandb_config["env_path"]
         load_dotenv(dotenv_path=dotenv_path)
         WANDB_AUTH_KEY = os.getenv("WANDB_AUTH_KEY")
@@ -31,13 +34,13 @@ class Wandb:
         if phase != "team_eval":
             tags.extend(
                 [
-                    f"name: {self.config.name}",
-                    f"lr: {self.config.optimizer.args.lr}",
-                    f"optimizer: {self.config.optimizer.type}",
-                    f"usertrans: {self.config.data_loader.type}",
+                    f"name: {self.config['name']}",
+                    f"lr: {self.config['optimizer']['args']['lr']}",
+                    f"optimizer: {self.config['optimizer']['type']}",
+                    f"usertrans: {self.config['data_loader']['type']}",
                 ]
             )
-            name = f"{self.config.arch.type}, {phase}, {self.unique_tag}"
+            name = f"{self.config['arch']['type']}, {phase}, {self.unique_tag}"
         if kwargs:
             for k, v in kwargs.items():
                 tags.append(f"{k}: {v}")
@@ -47,11 +50,11 @@ class Wandb:
         wandb.config.update(self.config)
         wandb.config.update({"PHASE": phase})
 
-    def log_wandb(phase="train", acc=0, loss=0, single_table=False):
+    def log(self, phase="train", acc=0.0, loss=0.0, single_table=False):
         """
         wandb에 차트 그래프를 그리기 위해 로그를 찍는 함수
         :param phase: 'train' or 'valid'
-        :paramacc: accuracy
+        :param acc: accuracy
         :param loss: loss
         :param sing_table: True로 체크하면 train과 validation이 한개의 차트에 표시됨
         """

@@ -1,8 +1,9 @@
+from model.metric import Averager
 import numpy as np
 import torch
 from torchvision.utils import make_grid
 from base import BaseTrainer
-from utils import inf_loop, MetricTracker, Wandb
+from utils import inf_loop, MetricTracker
 
 
 class Trainer(BaseTrainer):
@@ -25,7 +26,6 @@ class Trainer(BaseTrainer):
     ):
         super().__init__(model, criterion, metric_ftns, optimizer, config)
         self.config = config
-        self.Wandb = Wandb(self.config)
         self.device = device
         self.data_loader = data_loader
         if len_epoch is None:
@@ -41,6 +41,9 @@ class Trainer(BaseTrainer):
         self.log_step = int(np.sqrt(data_loader.batch_size))
         self.train_metrics = MetricTracker("loss", *[m.__name__ for m in self.metric_ftns], writer=self.writer)
         self.valid_metrics = MetricTracker("loss", *[m.__name__ for m in self.metric_ftns], writer=self.writer)
+        self.loss_hist = Averager()
+        self.model = model
+        self.model.to(self.device)
 
     def _train_epoch(self, epoch):
         """
@@ -51,37 +54,29 @@ class Trainer(BaseTrainer):
         """
         self.model.train()
         self.train_metrics.reset()
-        for batch_idx, (data, target) in enumerate(self.data_loader):
-            data, target = data.to(self.device), target.to(self.device)
+        for batch_idx, (images, targets, image_ids) in enumerate(self.data_loader):
+            # gpu 계산을 위해 image.to(device)
+            images = list(image.float().to(self.device) for image in images)
+            targets = [{k: v.to(self.device) for k, v in t.items()} for t in targets]
 
+            # calculate loss
+            loss_dict = self.model(images, targets)
+
+            losses = sum(loss for loss in loss_dict.values())
+            loss_value = losses.item()
+            self.loss_hist.send(loss_value)
+
+            # backward
             self.optimizer.zero_grad()
-            output = self.model(data)
-            loss = self.criterion(output, target)
-            loss.backward()
+            losses.backward()
             self.optimizer.step()
-
-            self.writer.set_step((epoch - 1) * self.len_epoch + batch_idx)
-            self.train_metrics.update("loss", loss.item())
-            for met in self.metric_ftns:
-                self.train_metrics.update(met.__name__, met(output, target))
-
-            if batch_idx % self.log_step == 0:
-                self.logger.debug(
-                    "Train Epoch: {} {} Loss: {:.6f}".format(epoch, self._progress(batch_idx), loss.item())
-                )
-                self.writer.add_image("input", make_grid(data.cpu(), nrow=8, normalize=True))
 
             if batch_idx == self.len_epoch:
                 break
-        log = self.train_metrics.result()
-
-        if self.do_validation:
-            val_log = self._valid_epoch(epoch)
-            log.update(**{"val_" + k: v for k, v in val_log.items()})
 
         if self.lr_scheduler is not None:
             self.lr_scheduler.step()
-        return log
+        return self.loss_hist.value
 
     def _valid_epoch(self, epoch):
         """

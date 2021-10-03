@@ -4,12 +4,15 @@ import collections
 import torch
 import numpy as np
 import data_loader.data_loaders as module_data
+import transform.transform as module_transform
+
 import model.loss as module_loss
 import model.metric as module_metric
 import model.model as module_arch
 from parse_config import ConfigParser
 from trainer import Trainer
 from utils import prepare_device
+from torch.utils.data import DataLoader
 
 # fix random seeds for reproducibility
 SEED = 123
@@ -19,28 +22,24 @@ torch.backends.cudnn.benchmark = False
 np.random.seed(SEED)
 
 
+def collate_fn(batch):
+    return tuple(zip(*batch))
+
+
 def main(config):
-    logger = config.get_logger("train")
+    data_set = config.init_obj("data_loader", module_data)
 
-    # setup data_loader instances
-    data_loader = config.init_obj("data_loader", module_data)
-    valid_data_loader = data_loader.split_validation()
-
-    # build model architecture, then print to console
+    data_loader = DataLoader(data_set, batch_size=16, shuffle=False, num_workers=0, collate_fn=collate_fn)
     model = config.init_obj("arch", module_arch)
-    logger.info(model)
 
-    # prepare for (multi-device) GPU training
     device, device_ids = prepare_device(config["n_gpu"])
     model = model.to(device)
     if len(device_ids) > 1:
         model = torch.nn.DataParallel(model, device_ids=device_ids)
 
-    # get function handles of loss and metrics
     criterion = getattr(module_loss, config["loss"])
     metrics = [getattr(module_metric, met) for met in config["metrics"]]
 
-    # build optimizer, learning rate scheduler. delete every lines containing lr_scheduler for disabling scheduler
     trainable_params = filter(lambda p: p.requires_grad, model.parameters())
     optimizer = config.init_obj("optimizer", torch.optim, trainable_params)
     lr_scheduler = config.init_obj("lr_scheduler", torch.optim.lr_scheduler, optimizer)
@@ -53,7 +52,7 @@ def main(config):
         config=config,
         device=device,
         data_loader=data_loader,
-        valid_data_loader=valid_data_loader,
+        valid_data_loader=None,
         lr_scheduler=lr_scheduler,
     )
 
@@ -91,7 +90,6 @@ if __name__ == "__main__":
         CustomArgs(["--bs", "--batch_size"], type=int, target="data_loader;args;batch_size"),
         CustomArgs(
             ["--ut", "--unique_tag"],
-            default=str(datetime.datetime.now()),
             type=str,
             target="wandb;unique_tag",
         ),
