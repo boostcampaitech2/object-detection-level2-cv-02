@@ -113,3 +113,6 @@ __MACOSX/
 
 # wandb directory
 wandb/
+
+# inference output files
+*.csv

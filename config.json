@@ -19,6 +19,15 @@
       "transforms": "get_train_transform"
     }
   },
+  "trainer": {
+    "epochs": 50,
+    "save_dir": "saved/",
+    "save_period": 1,
+    "verbosity": 2,
+    "monitor": "min val_loss",
+    "early_stop": 10,
+    "tensorboard": true
+  },
   "optimizer": {
     "type": "Adam",
     "args": {
@@ -36,13 +45,13 @@
       "gamma": 0.1
     }
   },
-  "trainer": {
-    "epochs": 2,
-    "save_dir": "saved/",
-    "save_period": 1,
-    "verbosity": 2,
-    "monitor": "min val_loss",
-    "early_stop": 10,
-    "tensorboard": true
-  }
+  "inference_data_loader": {
+    "type": "CustomInferenceDataset",
+    "args": {
+      "annotation": "../dataset/test.json",
+      "data_dir": "../dataset"
+    }
+  },
+  "inference_check_point": "../object-detection-level2-cv-02-recycling-trash/saved/models/Fast-Rcnn/1003_080205/model_best.pth",
+  "inference_file_name": "./faster_rcnn_torchvision_submission2.csv"
 }

@@ -23,6 +23,10 @@ class FasterRCNN_ResNet50_FPN(nn.Module):
         x = self.superM(x, y)
         return x
 
+    def inference(self, x):
+        x = self.superM(x)
+        return x
+
 
 # class MnistModel(BaseModel):
 #     def __init__(self, num_classes=10):
