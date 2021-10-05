@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .anchor_free_head import AnchorFreeHead
 from .anchor_head import AnchorHead
 from .atss_head import ATSSHead
@@ -27,6 +28,7 @@ from .retina_head import RetinaHead
 from .retina_sepbn_head import RetinaSepBNHead
 from .rpn_head import RPNHead
 from .sabl_retina_head import SABLRetinaHead
+from .solo_head import DecoupledSOLOHead, DecoupledSOLOLightHead, SOLOHead
 from .ssd_head import SSDHead
 from .vfnet_head import VFNetHead
 from .yolact_head import YOLACTHead, YOLACTProtonet, YOLACTSegmHead
@@ -73,6 +75,9 @@ __all__ = [
     "DETRHead",
     "YOLOFHead",
     "DeformableDETRHead",
+    "SOLOHead",
+    "DecoupledSOLOHead",
     "CenterNetHead",
     "YOLOXHead",
+    "DecoupledSOLOLightHead",
 ]

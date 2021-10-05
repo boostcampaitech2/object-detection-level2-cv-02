@@ -1,5 +1,6 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .dist_utils import DistOptimizerHook, all_reduce_dict, allreduce_grads, reduce_mean
-from .misc import flip_tensor, mask2ndarray, multi_apply, unmap
+from .misc import center_of_mass, flip_tensor, generate_coordinate, mask2ndarray, multi_apply, unmap
 
 __all__ = [
     "allreduce_grads",
@@ -10,4 +11,6 @@ __all__ = [
     "mask2ndarray",
     "flip_tensor",
     "all_reduce_dict",
+    "center_of_mass",
+    "generate_coordinate",
 ]

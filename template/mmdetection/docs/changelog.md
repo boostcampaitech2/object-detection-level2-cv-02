@@ -1,5 +1,111 @@
 ## Changelog
 
+### v2.17.0 (28/9/2021)
+
+#### Highlights
+
+- Support [PVT](https://arxiv.org/abs/2102.12122) and [PVTv2](https://arxiv.org/abs/2106.13797)
+- Support [SOLO](https://arxiv.org/abs/1912.04488)
+- Support large scale jittering and New Mask R-CNN baselines
+- Speed up `YOLOv3` inference
+
+#### New Features
+
+- Support [PVT](https://arxiv.org/abs/2102.12122) and [PVTv2](https://arxiv.org/abs/2106.13797) (#5780)
+- Support [SOLO](https://arxiv.org/abs/1912.04488) (#5832)
+- Support large scale jittering and New Mask R-CNN baselines (#6132)
+- Add a general data structrue for the results of models (#5508)
+- Added a base class for one-stage instance segmentation (#5904)
+- Speed up `YOLOv3` inference (#5991)
+- Release Swin Transformer pre-trained models (#6100)
+- Support mixed precision training in `YOLOX` (#5983)
+- Support `val` workflow in `YOLACT` (#5986)
+- Add script to test `torchserve` (#5936)
+- Support `onnxsim` with dynamic input shape (#6117)
+
+#### Bug Fixes
+
+- Fix the function naming errors in `model_wrappers` (#5975)
+- Fix regression loss bug when the input is an empty tensor (#5976)
+- Fix scores not contiguous error in `centernet_head` (#6016)
+- Fix missing parameters bug in `imshow_bboxes` (#6034)
+- Fix bug in `aug_test` of `HTC` when the length of `det_bboxes` is 0 (#6088)
+- Fix empty proposal errors in the training of some two-stage models (#5941)
+- Fix `dynamic_axes` parameter error in `ONNX` dynamic shape export (#6104)
+- Fix `dynamic_shape` bug of `SyncRandomSizeHook` (#6144)
+- Fix the Swin Transformer config link error in the configuration (#6172)
+
+#### Improvements
+
+- Add filter rules in `Mosaic` transform (#5897)
+- Add size divisor in get flops to avoid some potential bugs (#6076)
+- Add Chinese translation of `docs_zh-CN/tutorials/customize_dataset.md` (#5915)
+- Add Chinese translation of `conventions.md` (#5825)
+- Add description of the output of data pipeline (#5886)
+- Add dataset information in the README file for `PanopticFPN` (#5996)
+- Add `extra_repr` for `DropBlock` layer to get details in the model printing (#6140)
+- Fix CI out of memory and add PyTorch1.9 Python3.9 unit tests (#5862)
+- Fix download links error of some model (#6069)
+- Improve the generalization of XML dataset (#5943)
+- Polish assertion error messages (#6017)
+- Remove `opencv-python-headless` dependency by `albumentations` (#5868)
+- Check dtype in transform unit tests (#5969)
+- Replace the default theme of documentation with PyTorch Sphinx Theme (#6146)
+- Update the paper and code fields in the metafile (#6043)
+- Support to customize padding value of segmentation map (#6152)
+- Support to resize multiple segmentation maps (#5747)
+
+#### Contributors
+A total of 24 developers contributed to this release.
+Thanks @morkovka1337, @HarborYuan, @guillaumefrd, @guigarfr, @www516717402, @gaotongxiao, @ypwhs, @MartaYang, @shinya7y, @justiceeem, @zhaojinjian0000, @VVsssssk, @aravind-anantha, @wangbo-zhao, @czczup, @whai362, @czczup, @marijnl, @AronLin, @BIGWangYuDong, @hhaAndroid, @jshilong, @RangiLyu, @ZwwWayne
+
+### v2.16.0 (30/8/2021)
+
+#### Highlights
+
+- Support [Panoptic FPN](https://arxiv.org/abs/1901.02446) and [Swin Transformer](https://arxiv.org/abs/2103.14030)
+
+#### New Features
+
+- Support [Panoptic FPN](https://arxiv.org/abs/1901.02446) and release models (#5577, #5902)
+- Support Swin Transformer backbone (#5748)
+- Release RetinaNet models pre-trained with multi-scale 3x schedule (#5636)
+- Add script to convert unlabeled image list to coco format (#5643)
+- Add hook to check whether the loss value is valid (#5674)
+- Add YOLO anchor optimizing tool (#5644)
+- Support export onnx models without post process. (#5851)
+- Support classwise evaluation in CocoPanopticDataset (#5896)
+- Adapt browse_dataset for concatenated datasets. (#5935)
+- Add `PatchEmbed` and `PatchMerging` with `AdaptivePadding` (#5952)
+
+#### Bug Fixes
+
+- Fix unit tests of YOLOX (#5859)
+- Fix lose randomness in `imshow_det_bboxes` (#5845)
+- Make output result of `ImageToTensor` contiguous (#5756)
+- Fix inference bug when calling `regress_by_class` in RoIHead in some cases (#5884)
+- Fix bug in CIoU loss where alpha should not have gradient. (#5835)
+- Fix the bug that `multiscale_output` is defined but not used in HRNet (#5887)
+- Set the priority of EvalHook to LOW. (#5882)
+- Fix a YOLOX bug when applying bbox rescaling in test mode (#5899)
+- Fix mosaic coordinate error (#5947)
+- Fix dtype of bbox in RandomAffine. (#5930)
+
+#### Improvements
+
+- Add Chinese version of `data_pipeline` and  (#5662)
+- Support to remove state dicts of EMA when publishing models. (#5858)
+- Refactor the loss function in HTC and SCNet (#5881)
+- Use warnings instead of logger.warning (#5540)
+- Use legacy coordinate in metric of VOC (#5627)
+- Add Chinese version of customize_losses (#5826)
+- Add Chinese version of model_zoo (#5827)
+
+#### Contributors
+
+A total of 19 developers contributed to this release.
+Thanks @ypwhs, @zywvvd, @collinzrj, @OceanPang, @ddonatien, @@haotian-liu, @viibridges, @Muyun99, @guigarfr, @zhaojinjian0000, @jbwang1997,@wangbo-zhao, @xvjiarui, @RangiLyu, @jshilong, @AronLin, @BIGWangYuDong, @hhaAndroid, @ZwwWayne
+
 ### v2.15.1 (11/8/2021)
 
 #### Highlights

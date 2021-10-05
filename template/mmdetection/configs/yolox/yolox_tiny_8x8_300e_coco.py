@@ -58,7 +58,7 @@ interval = 10
 # The smaller the value, the higher the priority
 custom_hooks = [
     dict(type="YOLOXModeSwitchHook", num_last_epochs=15, priority=48),
-    dict(type="SyncRandomSizeHook", ratio_range=(10, 20), img_scale=img_scale, interval=interval, priority=48),
+    dict(type="SyncRandomSizeHook", ratio_range=(10, 20), img_scale=img_scale, priority=48),
     dict(type="SyncNormHook", num_last_epochs=15, interval=interval, priority=48),
     dict(type="ExpMomentumEMAHook", resume_from=resume_from, priority=49),
 ]

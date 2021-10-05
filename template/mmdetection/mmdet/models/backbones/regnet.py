@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import warnings
 
 import numpy as np
@@ -161,7 +162,7 @@ class RegNet(ResNet):
         self._make_stem_layer(in_channels, stem_channels)
 
         block_init_cfg = None
-        assert not (init_cfg and pretrained), "init_cfg and pretrained cannot be setting at the same time"
+        assert not (init_cfg and pretrained), "init_cfg and pretrained cannot be specified at the same time"
         if isinstance(pretrained, str):
             warnings.warn("DeprecationWarning: pretrained is deprecated, " 'please use "init_cfg" instead')
             self.init_cfg = dict(type="Pretrained", checkpoint=pretrained)

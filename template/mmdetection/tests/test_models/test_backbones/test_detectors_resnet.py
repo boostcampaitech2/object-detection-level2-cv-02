@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import pytest
 
 from mmdet.models.backbones import DetectoRS_ResNet
@@ -19,7 +20,7 @@ def test_detectorrs_resnet_backbone():
     )
     """Test init_weights config"""
     with pytest.raises(AssertionError):
-        # pretrained and init_cfg cannot be setting at the same time
+        # pretrained and init_cfg cannot be specified at the same time
         DetectoRS_ResNet(**detectorrs_cfg, pretrained="Pretrained", init_cfg="Pretrained")
 
     with pytest.raises(AssertionError):
