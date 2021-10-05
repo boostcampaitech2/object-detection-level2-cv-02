@@ -1,7 +1,9 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .accuracy import Accuracy, accuracy
 from .ae_loss import AssociativeEmbeddingLoss
 from .balanced_l1_loss import BalancedL1Loss, balanced_l1_loss
 from .cross_entropy_loss import CrossEntropyLoss, binary_cross_entropy, cross_entropy, mask_cross_entropy
+from .dice_loss import DiceLoss
 from .focal_loss import FocalLoss, sigmoid_focal_loss
 from .gaussian_focal_loss import GaussianFocalLoss
 from .gfocal_loss import DistributionFocalLoss, QualityFocalLoss
@@ -53,4 +55,5 @@ __all__ = [
     "VarifocalLoss",
     "KnowledgeDistillationKLDivLoss",
     "SeesawLoss",
+    "DiceLoss",
 ]

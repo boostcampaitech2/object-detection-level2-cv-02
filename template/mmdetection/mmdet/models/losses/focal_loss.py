@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -68,7 +69,7 @@ def sigmoid_focal_loss(pred, target, weight=None, gamma=2.0, alpha=0.25, reducti
     """
     # Function.apply does not accept keyword arguments, so the decorator
     # "weighted_loss" is not applicable
-    loss = _sigmoid_focal_loss(pred.contiguous(), target, gamma, alpha, None, "none")
+    loss = _sigmoid_focal_loss(pred.contiguous(), target.contiguous(), gamma, alpha, None, "none")
     if weight is not None:
         if weight.shape != loss.shape:
             if weight.size(0) == loss.size(0):

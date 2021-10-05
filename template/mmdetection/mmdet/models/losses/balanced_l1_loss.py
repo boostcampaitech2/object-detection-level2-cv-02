@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import mmcv
 import numpy as np
 import torch
@@ -32,7 +33,10 @@ def balanced_l1_loss(pred, target, beta=1.0, alpha=0.5, gamma=1.5, reduction="me
         torch.Tensor: The calculated loss
     """
     assert beta > 0
-    assert pred.size() == target.size() and target.numel() > 0
+    if target.numel() == 0:
+        return pred.sum() * 0
+
+    assert pred.size() == target.size()
 
     diff = torch.abs(pred - target)
     b = np.e ** (gamma / alpha) - 1

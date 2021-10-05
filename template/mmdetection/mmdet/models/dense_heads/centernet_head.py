@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import torch
 import torch.nn as nn
 from mmcv.cnn import bias_init_with_prob, normal_init
@@ -327,7 +328,7 @@ class CenterNetHead(BaseDenseHead, BBoxTestMixin):
         if labels.numel() == 0:
             return bboxes, labels
 
-        out_bboxes, keep = batched_nms(bboxes[:, :4], bboxes[:, -1], labels, cfg.nms_cfg)
+        out_bboxes, keep = batched_nms(bboxes[:, :4].contiguous(), bboxes[:, -1].contiguous(), labels, cfg.nms_cfg)
         out_labels = labels[keep]
 
         if len(out_bboxes) > 0:

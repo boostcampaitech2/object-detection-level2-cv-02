@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import math
 
 import torch
@@ -5,6 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from mmcv.cnn import ConvModule, DepthwiseSeparableConvModule, bias_init_with_prob
 from mmcv.ops.nms import batched_nms
+from mmcv.runner import force_fp32
 
 from mmdet.core import MlvlPointGenerator, bbox_xyxy_to_cxcywh, build_assigner, build_sampler, multi_apply
 from ..builder import HEADS, build_loss
@@ -109,6 +111,7 @@ class YOLOXHead(BaseDenseHead, BBoxTestMixin):
             sampler_cfg = dict(type="PseudoSampler")
             self.sampler = build_sampler(sampler_cfg, context=self)
 
+        self.fp16_enabled = False
         self._init_layers()
 
     def _init_layers(self):
@@ -248,7 +251,7 @@ class YOLOXHead(BaseDenseHead, BBoxTestMixin):
         flatten_bboxes = self._bbox_decode(flatten_priors, flatten_bbox_preds)
 
         if rescale:
-            flatten_bboxes[..., :4] /= flatten_bboxes.new_tensor(scale_factors)
+            flatten_bboxes[..., :4] /= flatten_bboxes.new_tensor(scale_factors).unsqueeze(1)
 
         result_list = []
         for img_id in range(len(img_metas)):
@@ -286,6 +289,7 @@ class YOLOXHead(BaseDenseHead, BBoxTestMixin):
             dets, keep = batched_nms(bboxes, scores, labels, cfg.nms)
             return dets, labels[keep]
 
+    @force_fp32(apply_to=("cls_scores", "bbox_preds", "objectnesses"))
     def loss(self, cls_scores, bbox_preds, objectnesses, gt_bboxes, gt_labels, img_metas, gt_bboxes_ignore=None):
         """Compute loss of the head.
         Args:

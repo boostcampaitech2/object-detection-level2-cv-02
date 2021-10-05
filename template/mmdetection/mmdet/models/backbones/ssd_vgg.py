@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import warnings
 
 import torch.nn as nn
@@ -69,7 +70,7 @@ class SSDVGG(VGG, BaseModule):
         self.features.add_module(str(len(self.features)), nn.ReLU(inplace=True))
         self.out_feature_indices = out_feature_indices
 
-        assert not (init_cfg and pretrained), "init_cfg and pretrained cannot be setting at the same time"
+        assert not (init_cfg and pretrained), "init_cfg and pretrained cannot be specified at the same time"
 
         if init_cfg is not None:
             self.init_cfg = init_cfg

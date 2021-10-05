@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .class_names import (
     cityscapes_classes,
     coco_classes,

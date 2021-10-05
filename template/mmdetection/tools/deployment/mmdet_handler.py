@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 import base64
 import os
 
@@ -61,6 +62,6 @@ class MMdetHandler(BaseHandler):
                     bbox_coords = bbox[:-1].tolist()
                     score = float(bbox[-1])
                     if score >= self.threshold:
-                        output[image_index].append({class_name: bbox_coords, "score": score})
+                        output[image_index].append({"class_name": class_name, "bbox": bbox_coords, "score": score})
 
         return output

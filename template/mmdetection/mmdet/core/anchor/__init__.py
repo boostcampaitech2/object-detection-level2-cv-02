@@ -1,3 +1,4 @@
+# Copyright (c) OpenMMLab. All rights reserved.
 from .anchor_generator import AnchorGenerator, LegacyAnchorGenerator, YOLOAnchorGenerator
 from .builder import ANCHOR_GENERATORS, PRIOR_GENERATORS, build_anchor_generator, build_prior_generator
 from .point_generator import MlvlPointGenerator, PointGenerator
