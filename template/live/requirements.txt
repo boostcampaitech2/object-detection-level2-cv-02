@@ -1,0 +1,14 @@
+torch>=1.1
+torchvision
+numpy
+tqdm
+tensorboard>=1.14
+python-dotenv
+albumentations
+pycocotools
+opencv-python
+torchnet
+pandas
+map-boxes
+jupyter
+wandb
