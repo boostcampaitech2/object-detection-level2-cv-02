@@ -25,7 +25,7 @@ def parse_args():
     # config 파일 경로 (학습 시킬 때 사용했던 config 파일, work_dir에도 복사되어있음)
     parser.add_argument("config", help="test config file path")
     # checkpoint가 저장되어있는 work_dir 경로
-    parser.add_argument("work_dir", help="the directory to save the file containing evaluation metrics")
+    parser.add_argument("--work_dir", help="the directory to save the file containing evaluation metrics")
     # 사용할 checkpoint epoch
     parser.add_argument("--epoch", default="latest", help="Checkpoint file's epoch")
 
@@ -76,7 +76,8 @@ def main():
     args = parse_args()
 
     cfg = Config.fromfile(args.config)
-    cfg.work_dir = args.work_dir
+    if args.work_dir:
+        cfg.work_dir = args.work_dir
     cfg.data.test.test_mode = True
 
     dataset = build_dataset(cfg.data.test)
