@@ -14,6 +14,7 @@ from .rfp import RFP
 from .ssd_neck import SSDNeck
 from .yolo_neck import YOLOV3Neck
 from .yolox_pafpn import YOLOXPAFPN
+from .bifpn import BiFPN
 
 __all__ = [
     "FPN",
@@ -31,4 +32,5 @@ __all__ = [
     "CTResNetNeck",
     "SSDNeck",
     "YOLOXPAFPN",
+    "BiFPN",
 ]
