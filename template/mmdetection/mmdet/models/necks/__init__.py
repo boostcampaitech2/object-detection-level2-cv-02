@@ -17,6 +17,7 @@ from .yolox_pafpn import YOLOXPAFPN
 from .bifpn import BiFPN
 
 __all__ = [
+    "BiFPN",
     "FPN",
     "BFP",
     "ChannelMapper",
@@ -32,5 +33,4 @@ __all__ = [
     "CTResNetNeck",
     "SSDNeck",
     "YOLOXPAFPN",
-    "BiFPN",
 ]
