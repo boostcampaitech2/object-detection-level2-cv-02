@@ -36,7 +36,6 @@ model = dict(
     neck=dict(in_channels=[128, 256, 512, 1024]),
 )
 
-
 # work_dir, wandb exp name
 exp = "htc_swin_b"
 work_dir = f"./work_dirs/{exp}"
