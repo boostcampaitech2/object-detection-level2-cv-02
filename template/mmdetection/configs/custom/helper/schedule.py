@@ -12,6 +12,7 @@ optimizer = dict(
         }
     ),
 )
+optimizer_config = dict(grad_clip=None)
 
 # learning policy
 lr_config = dict(policy="step", warmup="linear", warmup_ratio=0.001, warmup_iters=1000, step=[8, 12])
