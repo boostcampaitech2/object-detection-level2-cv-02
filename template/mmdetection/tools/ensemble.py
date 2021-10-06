@@ -1,3 +1,6 @@
+# Usage
+# python tools/ensemble.py --submission_files /opt/ml/detection/mmdetection/tools/submission_ensemble_iou4.csv /opt/ml/detection/mmdetection/tools/submission_ensemble_iou5.csv /opt/ml/detection/mmdetection/tools/submission_ensemble_iou6.csv --output_csv /opt/ml/detection/mmdetection/tools/final_output.csv
+
 import pandas as pd
 from ensemble_boxes import *
 import numpy as np
