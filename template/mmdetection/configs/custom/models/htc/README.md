@@ -2,7 +2,8 @@
 ## Base
 | Exp num | Backbone  | RoI Head   | Epoch |initial lr |Lr schd | Optimizer | Inf time (fps) | val/bbox_mAP| val/bbox_mAP_50 |  val/bbox_mAP_75 | val/bbox_mAP_l | val/bbox_mAP_m | val/bbox_mAP_s |train/loss_rpn_cls | train/s1.loss_bbox | train/s2.loss_cls | train/s1.acc |train/s2.acc | train/loss |
 |:-------:|:---------:|:-------:|:-------:|:-------:|:-------:|:--------:|:--------------:|:-------:|:--------:|:--------:|:--------:|:--------:|:--------:|:---------------:|:--------------:|:--------------:|:---------------:|:------------:|:----------:|
-| 0      | swin | htc      | 1x  |1.000e-06     |step|  sgd(momentum = 0.9 , ~)       | 42.3   | 42.3   | 42.3   | 42.3   | 42.3   | 37.4    | 37.4   | 37.4 | 37.4  | 37.4  | 37.4  |37.4   | 37.4  | 37.4  |
+| 1      | swin | htc      | 1x  |1.000e-06     |step|  sgd(momentum = 0.9 , ~)       | 42.3   | 42.3   | 42.3   | 42.3   | 42.3   | 37.4    | 37.4   | 37.4 | 37.4  | 37.4  | 37.4  |37.4   | 37.4  | 37.4  |
+| 2      | pvt | htc      | 1x  |1.000e-06     |step|  AdamW       | 42.3   | 0.487   | 0.643  |  0.521  | 0.561   | 0.187    | 0.017  | 37.4 | 37.4  | 37.4  | 37.4  |37.4   | 37.4  | 37.4  |
 ## Experiment
 inference 에 사용할 가장 좋은 checkpoint 기준 score 작성  
 <span style="color:blue">1. backbone에 따른 전체 metric 변화 관찰</span>  
@@ -28,10 +29,10 @@ inference 에 사용할 가장 좋은 checkpoint 기준 score 작성
 
 | Exp num | Backbone  | RoI Head   | Epoch |initial lr |Lr schd | Optimizer | Inf time (fps) | val/bbox_mAP| val/bbox_mAP_50 |  val/bbox_mAP_75 | val/bbox_mAP_l | val/bbox_mAP_m | val/bbox_mAP_s |train/loss_rpn_cls | train/s1.loss_bbox | train/s2.loss_cls | train/s1.acc |train/s2.acc | train/loss |
 |:-------:|:---------:|:-------:|:-------:|:-------:|:-------:|:--------:|:--------------:|:-------:|:--------:|:--------:|:--------:|:--------:|:--------:|:---------------:|:--------------:|:--------------:|:---------------:|:------------:|:----------:|
-| 1-1       | swin | htc      | 1x  |1.000e-06     |step|  sgd(momentum = 0.9 , ~)     | 5.8            | 42.3   | 42.3   | 42.3   | 42.3   | 42.3   | 37.4    | 37.4   | 37.4 | 37.4  | 37.4  | 37.4  |37.4   | 37.4  | 37.4  |
-| 1-2     |swin | htc      | 1x  |1.000e-06     |step|  sgd(momentum = 0.9 , ~)      | -              | 42.3   | 42.3   | 42.3   | 42.3   | 43.3   | 38.3    | 37.4  | 37.4  | 37.4  | 37.4  | 37.4  | 37.4  | 37.4  |  37.4 |
-
+| 1      | swin | htc      | 1x  |1.000e-06     |step|  sgd(momentum = 0.9 , ~)       | 42.3   | 42.3   | 42.3   | 42.3   | 42.3   | 37.4    | 37.4   | 37.4 | 37.4  | 37.4  | 37.4  |37.4   | 37.4  | 37.4  |
+| 2      | pvt | htc      | 1x  |1.000e-06     |step|  AdamW       | 42.3   | 0.487   | 0.643  |  0.521  | 0.561   | 0.187    | 0.017  | 37.4 | 37.4  | 37.4  | 37.4  |37.4   | 37.4  | 37.4  |
 ## Leader board 결과(제출했을 시)
 | Exp num | Public LB map  | 
 |:-------:|:---------:|
-| 1-2     | 54.5 | 
+| 1     | 54.5 | 
+| 2     | 0.598 | 
