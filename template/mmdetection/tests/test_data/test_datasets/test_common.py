@@ -17,6 +17,9 @@ from torch.utils.data import DataLoader
 from mmdet.core.evaluation import DistEvalHook, EvalHook
 from mmdet.datasets import DATASETS, CocoDataset, CustomDataset, build_dataset
 
+# 전역변수
+best_bbox_mAP_50 = 0
+
 
 def _create_dummy_coco_json(json_name):
     image = {
@@ -133,7 +136,10 @@ def test_dataset_evaluation():
     assert eval_results["bbox_mAP"] == 1
     assert eval_results["bbox_mAP_50"] == 1
     assert eval_results["bbox_mAP_75"] == 1
+    global best_bbox_mAP_50
 
+    if eval_results["bbox_mAP_50"] > best_bbox_mAP_50:
+        eval_results["best_bbox_mAP_50"] = best_bbox_mAP_50
     # test concat dataset evaluation
     fake_concat_results = _create_dummy_results() + _create_dummy_results()
 
