@@ -69,6 +69,9 @@ def parse_args():
         default='none',
         help='job launcher')
     parser.add_argument('--local_rank', type=int, default=0)
+    
+    parser.add_argument('--k_fold', type = int,  default = 3,  help='train config file path')
+    
     args = parser.parse_args()
     if 'LOCAL_RANK' not in os.environ:
         os.environ['LOCAL_RANK'] = str(args.local_rank)
@@ -80,11 +83,12 @@ def parse_args():
     if args.options:
         warnings.warn('--options is deprecated in favor of --cfg-options')
         args.cfg_options = args.options
+    
 
     return args
 
 
-def main():
+def main_cv():
     args = parse_args()
 
     cfg = Config.fromfile(args.config)
@@ -156,11 +160,129 @@ def main():
     meta['seed'] = args.seed
     meta['exp_name'] = osp.basename(args.config)
 
-    # ------------------------------------------------------
-    model = build_detector(
+    
+    # ----------------------------------------------------------
+    for fold_i in range(1, args.k_fold+1):
+        print(f'----------------Train Fold {fold_i}----------------')
+        root='../../../dataset/'
+        cfg.data.train.ann_file = root + f'train_fold{fold_i}.json' # train json 정보
+        cfg.data.val.ann_file = root + f'val_fold{fold_i}.json' # test json 정보
+        
+        # exp = "kfold_test" model name
+        # work_dir = f"./work_dirs/{exp}"
+        cfg.work_dir = f"./work_dirs/{cfg.exp}" + f'/fold{fold_i}'
+        
+        meta['env_info'] = env_info
+        meta['config'] = cfg.pretty_text
+        meta['seed'] = args.seed
+        meta['exp_name'] = osp.basename(args.config)
+        
+        model = build_detector(
         cfg.model,
         train_cfg=cfg.get('train_cfg'),
         test_cfg=cfg.get('test_cfg'))
+        model.init_weights()
+
+        datasets = [build_dataset(cfg.data.train)]
+        if len(cfg.workflow) == 2:
+            val_dataset = copy.deepcopy(cfg.data.val)
+            val_dataset.pipeline = cfg.data.train.pipeline
+            datasets.append(build_dataset(val_dataset))
+        if cfg.checkpoint_config is not None:
+            # save mmdet version, config file content and class names in
+            # checkpoints as meta data
+            cfg.checkpoint_config.meta = dict(
+                mmdet_version=__version__ + get_git_hash()[:7],
+                CLASSES=datasets[0].CLASSES)
+        # add an attribute for visualization convenience
+        model.CLASSES = datasets[0].CLASSES
+        train_detector(
+            model,
+            datasets,
+            cfg,
+            distributed=distributed,
+            validate=(not args.no_validate),
+            timestamp=timestamp,
+            meta=meta)
+        
+def main(fold_i):
+    args = parse_args()
+
+    cfg = Config.fromfile(args.config)
+    if args.cfg_options is not None:
+        cfg.merge_from_dict(args.cfg_options)
+    # import modules from string list.
+    if cfg.get("custom_imports", None):
+        from mmcv.utils import import_modules_from_strings
+
+        import_modules_from_strings(**cfg["custom_imports"])
+    # set cudnn_benchmark
+    if cfg.get("cudnn_benchmark", False):
+        torch.backends.cudnn.benchmark = True
+
+    # work_dir is determined in this priority: CLI > segment in file > filename
+    if args.work_dir is not None:
+        # update configs according to CLI args if args.work_dir is not None
+        cfg.work_dir = args.work_dir
+    elif cfg.get("work_dir", None) is None:
+        # use config filename as default work_dir if cfg.work_dir is None
+        cfg.work_dir = osp.join("./work_dirs", osp.splitext(osp.basename(args.config))[0])
+    if args.resume_from is not None:
+        cfg.resume_from = args.resume_from
+    if args.gpu_ids is not None:
+        cfg.gpu_ids = args.gpu_ids
+    else:
+        cfg.gpu_ids = range(1) if args.gpus is None else range(args.gpus)
+
+    # init distributed env first, since logger depends on the dist info.
+    if args.launcher == "none":
+        distributed = False
+    else:
+        distributed = True
+        init_dist(args.launcher, **cfg.dist_params)
+        # re-set gpu_ids with distributed training mode
+        _, world_size = get_dist_info()
+        cfg.gpu_ids = range(world_size)
+      
+    # k-fold-----------------------------------  
+    print(f'----------------Train Fold {fold_i}----------------')
+    root='../../../dataset/'
+    cfg.data.train.ann_file = root + f'train_fold{fold_i}.json' # train json 정보
+    cfg.data.val.ann_file = root + f'val_fold{fold_i}.json' # test json 정보
+    cfg.work_dir = f"./work_dirs/{cfg.exp}" + f'/fold{fold_i}'
+
+    # create work_dir
+    mmcv.mkdir_or_exist(osp.abspath(cfg.work_dir))
+    # dump config
+    cfg.dump(osp.join(cfg.work_dir, osp.basename(args.config)))
+    # init the logger before other steps
+    timestamp = time.strftime("%Y%m%d_%H%M%S", time.localtime())
+    log_file = osp.join(cfg.work_dir, f"{timestamp}.log")
+    logger = get_root_logger(log_file=log_file, log_level=cfg.log_level)
+
+    # init the meta dict to record some important information such as
+    # environment info and seed, which will be logged
+    meta = dict()
+    # log env info
+    env_info_dict = collect_env()
+    env_info = "\n".join([(f"{k}: {v}") for k, v in env_info_dict.items()])
+    dash_line = "-" * 60 + "\n"
+    logger.info("Environment info:\n" + dash_line + env_info + "\n" + dash_line)
+    meta["env_info"] = env_info
+    meta["config"] = cfg.pretty_text
+    # log some basic info
+    logger.info(f"Distributed training: {distributed}")
+    logger.info(f"Config:\n{cfg.pretty_text}")
+
+    # set random seeds
+    if args.seed is not None:
+        logger.info(f"Set random seed to {args.seed}, " f"deterministic: {args.deterministic}")
+        set_random_seed(args.seed, deterministic=args.deterministic)
+    cfg.seed = args.seed
+    meta["seed"] = args.seed
+    meta["exp_name"] = osp.basename(args.config)
+
+    model = build_detector(cfg.model, train_cfg=cfg.get("train_cfg"), test_cfg=cfg.get("test_cfg"))
     model.init_weights()
 
     datasets = [build_dataset(cfg.data.train)]
@@ -171,35 +293,13 @@ def main():
     if cfg.checkpoint_config is not None:
         # save mmdet version, config file content and class names in
         # checkpoints as meta data
-        cfg.checkpoint_config.meta = dict(
-            mmdet_version=__version__ + get_git_hash()[:7],
-            CLASSES=datasets[0].CLASSES)
+        cfg.checkpoint_config.meta = dict(mmdet_version=__version__ + get_git_hash()[:7], CLASSES=datasets[0].CLASSES)
     # add an attribute for visualization convenience
     model.CLASSES = datasets[0].CLASSES
     train_detector(
-        model,
-        datasets,
-        cfg,
-        distributed=distributed,
-        validate=(not args.no_validate),
-        timestamp=timestamp,
-        meta=meta)
-    
-    # ----------------------------------------------------------
-    # 각 fold 별로 레이블 비율 기준으로 train-val set split
-    # 1. 이미지 별 GT class 몇개인지
-    # class2int = {"General trash" : 0, "Paper" : 1, "Paper pack" : 2, "Metal" : 3, "Glass" : 4, 
-    #        "Plastic" : 5, "Styrofoam" : 6, "Plastic bag" : 7, "Battery" : 8, "Clothing" : 9}
-    class2int = {k:i for i, k in enumerate(model.CLASSES)}
-    
-    def get_class_per_image(img):
-        class_num = [0 for _ in range(len(model.CLASSES))]
-        content = [line.strip().split(' ') for line in lines]
-        bbox_names = [x[0] for x in content]
+        model, datasets, cfg, distributed=distributed, validate=(not args.no_validate), timestamp=timestamp, meta=meta
+    )
         
-        # 미완
-        
-
-
 if __name__ == '__main__':
-    main()
+    for fold_i in range(1,4):
+        main(fold_i)
