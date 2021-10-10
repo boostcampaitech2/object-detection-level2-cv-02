@@ -1,5 +1,5 @@
-# python tools/train.py configs/custom/config.py
-# python tools/inference.py configs/custom/htc.py work_dirs/HTC_SwinTransformer --epoch best_bbox_mAP_50_epoch_14
+# python tools/train.py configs/custom/models/htc/htc_swin_b.py
+# python tools/inference.py configs/custom/models/htc/htc_swin_b.py --epoch best_bbox_mAP_50_epoch_13
 
 # model settings
 _base_ = [

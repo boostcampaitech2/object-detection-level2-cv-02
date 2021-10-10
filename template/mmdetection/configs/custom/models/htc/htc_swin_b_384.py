@@ -1,5 +1,5 @@
 # python tools/train.py configs/custom/models/htc/htc_swin_b_384.py
-# python tools/inference.py configs/custom/models/htc/htc_swin_b_384.py --epoch best_bbox_mAP_50_epoch_14
+# python tools/inference.py configs/custom/models/htc/htc_swin_b_384.py --epoch best_bbox_mAP_50_epoch_15
 
 # model settings
 _base_ = [
@@ -57,4 +57,4 @@ log_config = dict(
 # learning policy
 lr_config = dict(policy="step", warmup="linear", warmup_ratio=0.001, warmup_iters=1000, step=[8, 12])
 
-runner = dict(type="EpochBasedRunner", max_epochs=15)
+runner = dict(type="EpochBasedRunner", max_epochs=20)
