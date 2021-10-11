@@ -1,4 +1,4 @@
-# python tools/train.py configs/custom/models/htc/htc_swin_b.py
+# python tools/train.py configs/custom/models/htc/htc_swin_b_sweeps.py
 # python tools/inference.py configs/custom/models/htc/htc_swin_b.py --epoch best_bbox_mAP_50_epoch_13
 
 # model settings
@@ -37,7 +37,7 @@ model = dict(
 )
 
 # work_dir, wandb exp name
-exp = "htc_swin_b"
+exp = "htc_swin_b_sweeps"
 work_dir = f"./work_dirs/{exp}"
 
 # Wandb Log
@@ -54,6 +54,7 @@ log_config = dict(
 )
 
 # learning policy
-lr_config = dict(policy="step", warmup="linear", warmup_ratio=0.001, warmup_iters=1000, step=[7, 12])
-
-runner = dict(type="EpochBasedRunner", max_epochs=15)
+lr_config = dict(policy="step", warmup="linear", warmup_ratio=0.001, warmup_iters=1099, step=[7, 12])
+# learning policy
+# lr_config = dict(policy="step", warmup="linear", warmup_ratio=0.001, warmup_iters=1000, step=[7, 12])
+runner = dict(type="EpochBasedRunner", max_epochs=16)

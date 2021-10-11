@@ -1,5 +1,6 @@
 # Usage
 # python tools/ensemble.py --submission_files /opt/ml/detection/mmdetection/tools/submission_ensemble_iou4.csv /opt/ml/detection/mmdetection/tools/submission_ensemble_iou5.csv /opt/ml/detection/mmdetection/tools/submission_ensemble_iou6.csv --output_csv /opt/ml/detection/mmdetection/tools/final_output.csv
+# python tools/ensemble.py --submission_files work_dirs/htc_swin_b/submission.csv work_dirs/htc_swin_b_384/submission.csv work_dirs/htc_swin_b_bifpn/submission.csv work_dirs/hd/output.csv --output_csv final_output.csv
 
 import pandas as pd
 from ensemble_boxes import *
@@ -60,6 +61,7 @@ def main():
             labels_list.append(list(map(int, predict_list[:, 0].tolist())))
 
         if len(boxes_list):
+            # boxes, scores, labels = nms(boxes_list, scores_list, labels_list, iou_thr=iou_thr)
             boxes, scores, labels = nms(boxes_list, scores_list, labels_list, iou_thr=iou_thr)
             for box, score, label in zip(boxes, scores, labels):
                 prediction_string += (
