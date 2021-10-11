@@ -7,8 +7,7 @@ metric:
   goal: maximize
 parameters:
   config:
-    value: configs/custom/models/htc/config.py
+    value: configs/custom/models/htc/htc_swin_b_sweeps.py
   lr:
-    values: [0.001, 0.00001]
-  wd:
-    values: [0.005, 0.002]
+    values: [0.0007, 0.0005, 0.0001]
+

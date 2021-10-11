@@ -26,11 +26,15 @@ def set_custom_parser(args):
     options = [
         CustomArgs(["--lr", "--learning_rate"], type=float, target="optimizer;lr"),
         CustomArgs(["--wd", "--weight_decay"], type=float, target="optimizer;weight_decay"),
+        CustomArgs(["--periods"], type=int, target="lr_config;periods"),
+        CustomArgs(["--min_lr_ratio"], type=float, target="lr_config;min_lr_ratio"),
     ]
     for opt in options:
         args.add_argument(*opt.flags, default=None, type=opt.type)
     if not isinstance(args, tuple):
         args = args.parse_args()
+    if args.periods is not None:
+        args.periods = [args.periods]
 
     cfg = Config.fromfile(args.config)
     modification = {opt.target: getattr(args, get_opt_name(opt.flags)) for opt in options}
