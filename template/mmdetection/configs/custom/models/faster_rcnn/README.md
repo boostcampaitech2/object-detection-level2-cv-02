@@ -51,9 +51,7 @@ inference 에 사용할 가장 좋은 checkpoint 기준 score 작성
 | 1-2      | pvtv2_b0 | Faster R-CNN      | 1x  |12 |lr=0.002   |dict(_delete_=True, policy="step", warmup="linear", warmup_iters=500, warmup_ratio=0.001, step=[8, 11])|dict(_delete_=True, type="SGD", lr=0.002, momentum=0.9, weight_decay=0.0001) | 1024x1024   |0.164  |0.337  | 0.145  |0.000 | 0.031 |0.197  | 0.0406|0.0432 | 0.2779 |91.9211| 0.2630| 0.6248|
 | 1-3      | pvtv2_b5 | Faster R-CNN      | 1x  |11 |lr=0.002   |dict(_delete_=True, policy="step", warmup="linear", warmup_iters=500, warmup_ratio=0.001, step=[8, 11])|dict(_delete_=True, type="SGD", lr=0.002, momentum=0.9, weight_decay=0.0001) | 1024x1024   |0.345 |0.565 |  0.365 |0.011 | 0.080  | 0.409 |0.0547|0.0373 | 0.2471 |92.9791| 0.2188|0.5580|
 
-  bbox_mAP: 0.3450, bbox_mAP_50: 0.5650, bbox_mAP_75: 0.3650, bbox_mAP_s: 0.0110, bbox_mAP_m: 0.0800, bbox_mAP_l: 0.4090, bbox_mAP_copypaste: 0.345 0.565 0.365 0.011 0.080 0.409
-2021-10-11 21:07:55,372 - mmdet - INFO - Exp name: config.py
-2021-10-11 21:07:55,372 - mmdet - INFO - Epoch(val) [11][489]   loss_rpn_cls: 0.0547, loss_rpn_bbox: 0.0373, loss_cls: 0.2471, acc: 92.9791, loss_bbox: 0.2188, loss: 0.5580
+
 
 ## Leader board 결과(제출했을 시)
 | Exp num | Public LB map  | 
