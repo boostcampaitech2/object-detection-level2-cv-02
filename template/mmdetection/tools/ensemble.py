@@ -1,5 +1,6 @@
 # Usage
 # python tools/ensemble.py --submission_files /opt/ml/detection/mmdetection/tools/submission_ensemble_iou4.csv /opt/ml/detection/mmdetection/tools/submission_ensemble_iou5.csv /opt/ml/detection/mmdetection/tools/submission_ensemble_iou6.csv --output_csv /opt/ml/detection/mmdetection/tools/final_output.csv
+# python tools/ensemble.py --submission_files work_dirs/htc_swin_b/submission.csv work_dirs/htc_swin_b_384/submission.csv work_dirs/htc_swin_b_bifpn/submission.csv work_dirs/hd/output.csv --output_csv final_output.csv
 
 import pandas as pd
 from ensemble_boxes import *
@@ -14,6 +15,7 @@ def parse_args():
     parser.add_argument("--annotation", default="/opt/ml/detection/dataset/test.json")
     parser.add_argument("--output_csv", default="submission.csv")
     parser.add_argument("--iou", type=float, default=0.5, help="IoU threshold (default: 0.5)")
+    parser.add_argument("--ensemble", type = str, default = 'wbf', help = 'nms : nms, softnms : soft, non-maximum weighted : nmw, weighted boxes fusion : wbf')
 
     args = parser.parse_args()
     return args
@@ -59,8 +61,20 @@ def main():
             scores_list.append(list(map(float, predict_list[:, 1].tolist())))
             labels_list.append(list(map(int, predict_list[:, 0].tolist())))
 
+        iou_thr = 0.5  # 대회 규정(GT와 iou 0.5 이상만 private map 계산)에 맞게 0.5로 지정함 
+        skip_box_thr = 0.05 # condfidence score가 thr이하인 box는 skip - 박스 너무 많으면 늘려도 됨
+        sigma = 0.1 # soft nms parameter
+        weights = [1] * len(submission_df) # 모든 모델 동일한 weights. 변경하고 싶으면 weights더 주고 싶은 모델에 [2,1,1]식으로 주면 됨
+
         if len(boxes_list):
-            boxes, scores, labels = nms(boxes_list, scores_list, labels_list, iou_thr=iou_thr)
+            if args.ensemble == 'nms':
+                boxes, scores, labels = nms(boxes_list, scores_list, labels_list, iou_thr=iou_thr)
+            elif args.ensemble == 'soft':
+                boxes, scores, labels = soft_nms(boxes_list, scores_list, labels_list, weights=weights, iou_thr=iou_thr, sigma=sigma, thresh=skip_box_thr)
+            elif args.ensemble == 'nmw':
+                boxes, scores, labels = non_maximum_weighted(boxes_list, scores_list, labels_list, weights=weights, iou_thr=iou_thr, skip_box_thr=skip_box_thr)
+            else:
+                boxes, scores, labels = weighted_boxes_fusion(boxes_list, scores_list, labels_list, weights=weights, iou_thr=iou_thr, skip_box_thr=skip_box_thr)
             for box, score, label in zip(boxes, scores, labels):
                 prediction_string += (
                     str(label)

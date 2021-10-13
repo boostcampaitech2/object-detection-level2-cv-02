@@ -1,9 +1,8 @@
 # model settings
 model = dict(
-    type="HybridTaskCascade",
+    type="CascadeRCNN",
     backbone=dict(
         type="ResNet",
-        depth=50,
         num_stages=4,
         out_indices=(0, 1, 2, 3),
         frozen_stages=1,
@@ -23,9 +22,7 @@ model = dict(
         loss_bbox=dict(type="SmoothL1Loss", beta=1.0 / 9.0, loss_weight=1.0),
     ),
     roi_head=dict(
-        type="HybridTaskCascadeRoIHead",
-        interleaved=True,
-        mask_info_flow=True,
+        type="CascadeRoIHead",
         num_stages=3,
         stage_loss_weights=[1, 0.5, 0.25],
         bbox_roi_extractor=dict(
@@ -81,7 +78,14 @@ model = dict(
     # model training and testing settings
     train_cfg=dict(
         rpn=dict(
-            assigner=dict(type="MaxIoUAssigner", pos_iou_thr=0.7, neg_iou_thr=0.3, min_pos_iou=0.3, ignore_iof_thr=-1),
+            assigner=dict(
+                type="MaxIoUAssigner",
+                pos_iou_thr=0.7,
+                neg_iou_thr=0.3,
+                min_pos_iou=0.3,
+                match_low_quality=True,
+                ignore_iof_thr=-1,
+            ),
             sampler=dict(type="RandomSampler", num=256, pos_fraction=0.5, neg_pos_ub=-1, add_gt_as_proposals=False),
             allowed_border=0,
             pos_weight=-1,
@@ -91,28 +95,40 @@ model = dict(
         rcnn=[
             dict(
                 assigner=dict(
-                    type="MaxIoUAssigner", pos_iou_thr=0.5, neg_iou_thr=0.5, min_pos_iou=0.5, ignore_iof_thr=-1
+                    type="MaxIoUAssigner",
+                    pos_iou_thr=0.5,
+                    neg_iou_thr=0.5,
+                    min_pos_iou=0.5,
+                    match_low_quality=False,
+                    ignore_iof_thr=-1,
                 ),
                 sampler=dict(type="RandomSampler", num=512, pos_fraction=0.25, neg_pos_ub=-1, add_gt_as_proposals=True),
-                mask_size=28,
                 pos_weight=-1,
                 debug=False,
             ),
             dict(
                 assigner=dict(
-                    type="MaxIoUAssigner", pos_iou_thr=0.6, neg_iou_thr=0.6, min_pos_iou=0.6, ignore_iof_thr=-1
+                    type="MaxIoUAssigner",
+                    pos_iou_thr=0.6,
+                    neg_iou_thr=0.6,
+                    min_pos_iou=0.6,
+                    match_low_quality=False,
+                    ignore_iof_thr=-1,
                 ),
                 sampler=dict(type="RandomSampler", num=512, pos_fraction=0.25, neg_pos_ub=-1, add_gt_as_proposals=True),
-                mask_size=28,
                 pos_weight=-1,
                 debug=False,
             ),
             dict(
                 assigner=dict(
-                    type="MaxIoUAssigner", pos_iou_thr=0.7, neg_iou_thr=0.7, min_pos_iou=0.7, ignore_iof_thr=-1
+                    type="MaxIoUAssigner",
+                    pos_iou_thr=0.7,
+                    neg_iou_thr=0.7,
+                    min_pos_iou=0.7,
+                    match_low_quality=False,
+                    ignore_iof_thr=-1,
                 ),
                 sampler=dict(type="RandomSampler", num=512, pos_fraction=0.25, neg_pos_ub=-1, add_gt_as_proposals=True),
-                mask_size=28,
                 pos_weight=-1,
                 debug=False,
             ),
@@ -120,6 +136,6 @@ model = dict(
     ),
     test_cfg=dict(
         rpn=dict(nms_pre=1000, max_per_img=1000, nms=dict(type="nms", iou_threshold=0.7), min_bbox_size=0),
-        rcnn=dict(score_thr=0.0, nms=dict(type="nms", iou_threshold=0.5), max_per_img=100, mask_thr_binary=0.5),
+        rcnn=dict(score_thr=0.05, nms=dict(type="nms", iou_threshold=0.5), max_per_img=100), # score_thr = 0.5 
     ),
 )
