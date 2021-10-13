@@ -2,12 +2,13 @@
 ## Base
 | Exp num | Backbone  | RoI Head   | Epoch |initial lr |Lr schd | Optimizer | val/bbox_mAP| val/bbox_mAP_50 |  val/bbox_mAP_75 | val/bbox_mAP_l | val/bbox_mAP_m | val/bbox_mAP_s | config | checkpoint |
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| 1 | swin-b | htc | 13 | 1e-4 | step | AdamW | 0.449 | 0.619 | 0.473 | 0.532 | 0.077 | 0.10773 | [config]() | [Google](https://drive.google.com/file/d/1AKzqWlWGRL3D1WP6i6zBEhj40-VKLJeS/view?usp=sharing) |
-| 2 | swin-b | htc | 17 | 1e-4 | step | AdamW | 0.455 | 0.622 | 0.485 | 0.538 | 0.08 | 0.043 | [config]() | [Google](https://drive.google.com/file/d/1qwZXqeQ6NV3k7aUFM2gOzHijnbby20Hm/view?usp=sharing) |
-| 3 | swin-b | htc | 14 | 1e-4 | step | AdamW | 0.406 | 0.597 | 0.438 | 0.479 | 0.086 | 0.013 | [config]() | [Google](https://drive.google.com/file/d/1-vQtS_ekP70gcHJmpfUpmmsiDD377l_x/view?usp=sharing) |
-| 4 | swin-t | htc | 15 | 1e-4 | step | AdamW | 0.26 | 0.453 | 0.277 | 0.31 | 0.042 | 0.036 | [config]() | |
-| 5 | swin-l | htc | 15 | 1e-4 | step | AdamW | 0.303 | 0.531 | 0.3 | 0.361 | 0.048 | 0.043 | [config]() | | 
-| 6 | swin-l | htc | | 1e-4 | step | AdamW | 0.43 | 0.612 | 0.46 | 0.508 | 0.083 | 0.032 | [config]() | |
+| 1 | swin-b | htc | 13 | 1e-4 | step | AdamW | 0.449 | 0.619 | 0.473 | 0.532 | 0.077 | 0.10773 | [config](https://github.com/boostcampaitech2/object-detection-level2-cv-02/blob/master/template/mmdetection/configs/custom/models/htc/htc_swin_b.py) | [Google](https://drive.google.com/file/d/1AKzqWlWGRL3D1WP6i6zBEhj40-VKLJeS/view?usp=sharing) |
+| 2 | swin-b | htc | 14 | 1e-4 | step | AdamW | 0.406 | 0.597 | 0.438 | 0.479 | 0.086 | 0.013 | [config](https://github.com/boostcampaitech2/object-detection-level2-cv-02/blob/master/template/mmdetection/configs/custom/models/htc/htc_swin_b_bifpn.py) | [Google](https://drive.google.com/file/d/1qwZXqeQ6NV3k7aUFM2gOzHijnbby20Hm/view?usp=sharing) |
+| 3 | swin-b | htc | 17 | 1e-4 | step | AdamW | 0.455 | 0.622 | 0.485 | 0.538 | 0.08 | 0.043 | [config](https://github.com/boostcampaitech2/object-detection-level2-cv-02/blob/master/template/mmdetection/configs/custom/models/htc/htc_swin_b_finetune_mosaic.py) | [Google](https://drive.google.com/file/d/1-vQtS_ekP70gcHJmpfUpmmsiDD377l_x/view?usp=sharing) |
+| 4 | swin-t | htc | 15 | 1e-4 | step | AdamW | 0.26 | 0.453 | 0.277 | 0.31 | 0.042 | 0.036 | [config](https://github.com/boostcampaitech2/object-detection-level2-cv-02/blob/master/template/mmdetection/configs/custom/models/htc/htc_swin_t_frozen.py) | |
+| 5 | swin-l | htc | 15 | 1e-4 | step | AdamW | 0.303 | 0.531 | 0.3 | 0.361 | 0.048 | 0.043 | [config](https://github.com/boostcampaitech2/object-detection-level2-cv-02/blob/master/template/mmdetection/configs/custom/models/htc/htc_swin_l_frozen.py) | | 
+| 6 | swin-b | htc | 15 | 1e-4 | step | AdamW | 0.43 | 0.612 | 0.46 | 0.508 | 0.083 | 0.032 | [config](https://github.com/boostcampaitech2/object-detection-level2-cv-02/blob/master/template/mmdetection/configs/custom/models/htc/htc_swin_b_384.py) | |
+| 7 | swin-b | htc | - | 1e-4 | step | AdamW | 0.420 | 0.606 | 0.453 | 0.495 | 0.120 | 0.008 | [config](https://github.com/boostcampaitech2/object-detection-level2-cv-02/blob/master/template/mmdetection/configs/custom/models/htc/htc_swin_b.py) | [Google](https://drive.google.com/drive/folders/1WYRmSmzs4cQpSX09r8IsPNUpt7M9DJKJ?usp=sharing) |
 
 ## Experiment
 inference 에 사용할 가장 좋은 checkpoint 기준 score 작성  
@@ -48,6 +49,11 @@ inference 에 사용할 가장 좋은 checkpoint 기준 score 작성
 - 결과 : Swin-B 224을 사용한 실험1보다 mAP가 떨어졌다.
 - 결과 원인 분석 : 원인불명
 
+<span style="color:green">7. SOTA 모델인 실험 1에 k-fold 적용</span>  
+- 실험 가설 : 학습 데이터가 부족하므로 k-fold를 통해 모델을 학습 시키면 성능이 향상할 것이다
+- 실험 방법 : k-fold training, k=3
+- 결과 : mVal/mAP50=0.606, test/mAP50=0.629로 LB에서 점수가 약간 상승했다.
+- 결과 원인 분석 : 데이터 수의 증가. fold가 충분하지 못해 val score가 낮게 나온 것으로 추정된다.
 
 ## Leader board 결과(제출했을 시)
 | Exp num | mAP50  | 
@@ -58,3 +64,4 @@ inference 에 사용할 가장 좋은 checkpoint 기준 score 작성
 | 4 | |
 | 5 | |
 | 6 | 0.612 | 
+| 7 | 0.629 |
