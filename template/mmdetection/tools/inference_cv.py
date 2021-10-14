@@ -22,8 +22,8 @@ from pycocotools.coco import COCO
 from ensemble_boxes import *
 
 # usage
-# python tools/inference_cv.py --config /fold1 /fold2 /fold3 --work_dir ./work_dirs/kfold_test
-
+# python tools/inference_cv.py --config /fold1 /fold2 /fold3 --work_dir ./work_dirs/retinanet_resnet_kfold --exp_name /retina_r50_base_kfold.py
+# python tools/inference_cv.py --config /fold1 /fold2 /fold3 --work_dir ./work_dirs/retinanet_resnet_kfold --exp_name /retina_r50_base_kfold.py --ensemble soft       
 
 def parse_args():
     parser = argparse.ArgumentParser(description="MMDet test (and eval) a model")
@@ -40,6 +40,8 @@ def parse_args():
     parser.add_argument("--annotation", default="/opt/ml/detection/dataset/test.json")
     parser.add_argument("--iou", type=float, default=0.5, help="IoU threshold (default: 0.5)")
     parser.add_argument("--ensemble", type = str, default = 'wbf', help = 'nms : nms, softnms : soft, non-maximum weighted : nmw, weighted boxes fusion : wbf')
+    parser.add_argument("--exp_name", type=str, default='/config.py', help="name of conifg in work_dirs")
+
 
     args = parser.parse_args()
     return args
@@ -165,7 +167,7 @@ def ensemble_all_fold(args):
 def main(fold_i):
     args = parse_args()
 
-    cfg_file = args.work_dir + args.config[fold_i-1] + '/config.py'
+    cfg_file = args.work_dir + args.config[fold_i-1] + args.exp_name
     cfg = Config.fromfile(cfg_file)
     if args.work_dir:
         cfg.work_dir = args.work_dir

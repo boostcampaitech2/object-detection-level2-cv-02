@@ -1,0 +1,14 @@
+program: tools/train_sweeps.py
+entity: boostcamp-2th-cv-02team
+project: object-detection-recycling-trash
+method: grid
+metric:
+  name: val/bbox_mAP_50
+  goal: maximize
+parameters:
+  config:
+    value: configs/custom/models/retinanet/retinanet_r50_fpn.py
+  lr:
+    values: [0.0007, 0.0005, 0.0001]
+  
+

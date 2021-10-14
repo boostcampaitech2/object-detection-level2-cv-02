@@ -14,7 +14,7 @@ _base_ = [
 # backbone
 # 0. R50
 # 1. swim Transformer : mask_rcnn_swin-t-p4-w7_fpn_1x_coco
-# '''
+'''
 pretrained = (
     "https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_tiny_patch4_window7_224.pth"  # noqa
 )
@@ -59,7 +59,7 @@ model = dict(
 '''
 
 # 3.  retinanet_pvtv2-b5_fpn_1x_coco
-'''
+# '''
 model = dict(
     backbone=dict(
         _delete_=True,
@@ -71,10 +71,10 @@ model = dict(
     ),
     neck=dict(in_channels=[64, 128, 320, 512]),
 )
-'''
+# '''
 # runtime
 # work_dir, wandb exp name
-exp = "faster_rcnn_pvtv2_b5_backbone"
+exp = "faster_rcnn_swin_t_class_map"
 work_dir = f"./work_dirs/{exp}"
 
 # Wandb Log
@@ -104,5 +104,5 @@ lr_config = dict(_delete_=True, policy="step", warmup="linear", warmup_iters=500
 runner = dict(type="EpochBasedRunner", max_epochs=12)
 
 # dataset
-# evaluation = dict(interval=1, metric='bbox', save_)
+evaluation = dict(classwise = True) # class 별 ap 확인 
 data = dict(samples_per_gpu=1, workers_per_gpu=1)

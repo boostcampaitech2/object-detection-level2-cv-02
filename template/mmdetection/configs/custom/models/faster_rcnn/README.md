@@ -56,5 +56,5 @@ inference 에 사용할 가장 좋은 checkpoint 기준 score 작성
 ## Leader board 결과(제출했을 시)
 | Exp num | Public LB map  | 
 |:-------:|:---------:|
-| 1     | 54.5 | 
-| 2     | 0.598 | 
+| 1     | . | 
+| 2     |.| 

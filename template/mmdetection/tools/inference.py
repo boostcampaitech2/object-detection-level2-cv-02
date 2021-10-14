@@ -30,40 +30,68 @@ def parse_args():
     parser.add_argument("--epoch", default="latest", help="Checkpoint file's epoch")
 
     parser.add_argument("--show_score_thr", type=float, default=0.05, help="score threshold (default: 0.05)")
+    
+    # faster-rcnn 인 경우 
+    parser.add_argument("--faster", type=bool, default=False, help="if detector is faster r-cnn , set True")
 
     args = parser.parse_args()
     return args
 
 
-def make_csv(output, cfg):
+def make_csv(output, cfg, faster):
     # submission 양식에 맞게 output 후처리
     prediction_strings = []
     file_names = []
     coco = COCO(cfg.data.test.ann_file)
     img_ids = coco.getImgIds()
     class_num = len(cfg.data.test.classes)
-    for i, out in enumerate(output):
-        prediction_string = ""
-        image_info = coco.loadImgs(coco.getImgIds(imgIds=i))[0]
-        for j in range(class_num):
-            for o in out[j]:
-                prediction_string += (
-                    str(j)
-                    + " "
-                    + str(o[4])
-                    + " "
-                    + str(o[0])
-                    + " "
-                    + str(o[1])
-                    + " "
-                    + str(o[2])
-                    + " "
-                    + str(o[3])
-                    + " "
-                )
+    if faster:
+        for i, out in enumerate(output):
+            prediction_string = ""
+            image_info = coco.loadImgs(coco.getImgIds(imgIds=i))[0]
+            for j in range(class_num):
+                for o in out[j]:
+                    # xmin, ymin, xmax, ymax -> ymin, xmin, ymax, xmax
+                    prediction_string += (
+                        str(j)
+                        + " "
+                        + str(o[4])
+                        + " "
+                        + str(o[1])
+                        + " "
+                        + str(o[0])
+                        + " "
+                        + str(o[3])
+                        + " "
+                        + str(o[2])
+                        + " "
+                    )
 
-        prediction_strings.append(prediction_string)
-        file_names.append(image_info["file_name"])
+            prediction_strings.append(prediction_string)
+            file_names.append(image_info["file_name"])
+    else:
+        for i, out in enumerate(output):
+            prediction_string = ""
+            image_info = coco.loadImgs(coco.getImgIds(imgIds=i))[0]
+            for j in range(class_num):
+                for o in out[j]:
+                    prediction_string += (
+                        str(j)
+                        + " "
+                        + str(o[4])
+                        + " "
+                        + str(o[0])
+                        + " "
+                        + str(o[1])
+                        + " "
+                        + str(o[2])
+                        + " "
+                        + str(o[3])
+                        + " "
+                    )
+
+            prediction_strings.append(prediction_string)
+            file_names.append(image_info["file_name"])
 
     submission = pd.DataFrame()
     submission["PredictionString"] = prediction_strings
@@ -101,8 +129,9 @@ def main():
     model.CLASSES = dataset.CLASSES
     model = MMDataParallel(model.cuda(), device_ids=[0])
     # cal ouput
+    faster = args.faster
     output = single_gpu_test(model, data_loader, show_score_thr=args.show_score_thr)
-    make_csv(output, cfg)
+    make_csv(output, cfg, faster)
 
 
 if __name__ == "__main__":
