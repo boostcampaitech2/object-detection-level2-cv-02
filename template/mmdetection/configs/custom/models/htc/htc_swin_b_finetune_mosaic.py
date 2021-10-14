@@ -138,3 +138,4 @@ log_config = dict(
 # learning policy
 lr_config = dict(policy="step", warmup="linear", warmup_ratio=0.001, warmup_iters=1000, step=[7, 12])
 runner = dict(type="EpochBasedRunner", max_epochs=30)
+data = dict(samples_per_gpu=1, workers_per_gpu=1)

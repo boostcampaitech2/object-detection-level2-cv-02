@@ -1,0 +1,22 @@
+{
+    "csvs" : ["./csv/output_1.csv", "./csv/output_2.csv"],
+    "save_path" : "./work_dirs/final_ensemble/result_outputs.csv",
+    "ensemble_mode" : "wbf",
+    "weights" : [2, 1],
+    "iou_thr" : 0.5,
+    "skip_box_thr" : 0.0001,
+    "sigma" : 0.1,
+    "img_size" : 1024
+}
+
+// ensemble_inference_cfg.json
+
+// csvs = 앙상블을 원하는 csv 파일들의 경로 (두 개 이상도 가능합니다)
+
+// save_path = 결과로 나온 csv의 파일 경로와 이름
+
+// ensemble_mode = 원하는 앙상블 방법
+
+// weights, iou_thr, skip_box_thr, sigma = 앙상블 방법에 따른 파라미터
+
+// img_size = 원본 이미지 크기 (이번 데이터에서는 1024 고정)
