@@ -78,7 +78,8 @@ def main():
         iou_thr = 0.5  # 대회 규정(GT와 iou 0.5 이상만 private map 계산)에 맞게 0.5로 지정함
         skip_box_thr = 0.05  # condfidence score가 thr이하인 box는 skip - 박스 너무 많으면 늘려도 됨
         sigma = 0.1  # soft nms parameter
-        weights = [1] * len(submission_df)  # 모든 모델 동일한 weights. 변경하고 싶으면 weights더 주고 싶은 모델에 [2,1,1]식으로 주면 됨
+        # weights = [1] * len(submission_df)  # 모든 모델 동일한 weights. 변경하고 싶으면 weights더 주고 싶은 모델에 [2,1,1]식으로 주면 됨
+        weights = None
 
         if len(boxes_list):
             if args.ensemble == "nms":
