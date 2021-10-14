@@ -42,7 +42,7 @@ def extracting_info(csvs, img_size):
             tmp_box = []
             for i, pred in enumerate(prediction):
                 if i % 6 == 0:
-                    label_info_per_img.append(int(pred))
+                    label_info_per_img.append(int(float(pred)))
                 elif i % 6 == 1:
                     score_info_per_img.append(float(pred))
                 else:
