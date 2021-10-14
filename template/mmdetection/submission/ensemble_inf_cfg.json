@@ -1,0 +1,10 @@
+{
+    "csvs" : ["cascadercnn_pvt.csv", "htc_swin_b_finetune_mosaic.csv", "yolov5_CSPDarknet.csv", "htc_swin_b.csv", "htc_swin_b_384.csv"],
+    "save_path" : "/opt/ml/detection/object-detection-level2-cv-02/template/mmdetection/please1.csv",
+    "ensemble_mode" : "wbf",
+    "weights" : [1,1,1,1,1],
+    "iou_thr" : 0.5,
+    "skip_box_thr" : 0,
+    "sigma" : 0.1,
+    "img_size" : 1024
+}
