@@ -21,40 +21,17 @@ Epoch(val) [11][489] bbox_mAP: 0.2190, bbox_mAP_50: 0.4130, bbox_mAP_75: 0.2080,
 loss 없음
 
 
-
 ## Experiment
 inference 에 사용할 가장 좋은 checkpoint 기준 score 작성  
 <span style="color:blue">1. backbone에 따른 전체 metric 변화 관찰</span>  
 - 실험 가설 : 백본에 따라 meatirc 변화가 있을 것이다. 
 - 실험 방법 : backbone 변경
 - 결과 : 파라미터가 큰 모델일수록 더 잘됨 - ex ) pvt b0 보다 b5가 더 잘됨
-- 결과 원인 분석 : ~ 
+- 결과 원인 분석 : 모델의 크기가 커질수록 복잡한 표현을 할 수 있기 때문이다
 - 참고 자료 : 참고한 글이나 논문이나 블로그 있으면 link 달기
 
-<span style="color:red">2. 이미지 scale에 따른 bbox_small metric 변화 관찰</span>  
-- 실험 가설 : 이미지 크기가 클수록 작은객체를 더 잘 탐지할 것이다. 
-- 실험 방법 : input image scale 변경  
-- 결과 : input image scale이 클수록 작은 object 탐지율 올라감  
-- 결과 원인 분석 : ~ 
-- 참고 자료 : 참고한 글이나 논문이나 블로그 있으면 link 달기   
-
-<span style="color:green">3. backbone parameter freeze 에 따른 전체 metric 변화 관찰</span>  
-- 실험 가설 : 데이터 갯수가 적으므로 어쩌고 하면 저쩌고 할 것이다. 
-- 실험 방법 : backbone parameter freeze 하고 학습   
-- 결과 : ~~
-- 결과 원인 분석 : ~ 
-- 참고 자료 : ~~   
-
-| Exp num | Backbone  | RoI Head   | Epoch |Best Epoch |initial lr |Lr schd | Optimizer | Image size| val/bbox_mAP| val/bbox_mAP_50 |  val/bbox_mAP_75 | val/bbox_mAP_s | val/bbox_mAP_m | val/bbox_mAP_l |val/loss_rpn_cls | val/loss_rpn_bbox | val/loss_cls | val/acc |val/loss_bbox | val/loss |
-|:-------:|:---------:|:-------:|:-------:|:-------:|:-------:|:--------:|:--------:|:--------------:|:-------:|:--------:|:--------:|:--------:|:--------:|:--------:|:---------------:|:--------------:|:--------------:|:---------------:|:------------:|:----------:|
-| 1-1      | swin_t | Faster R-CNN      | 1x  |11 |lr=0.002   |dict(_delete_=True, policy="step", warmup="linear", warmup_iters=500, warmup_ratio=0.001, step=[8, 11])|dict(_delete_=True, type="SGD", lr=0.002, momentum=0.9, weight_decay=0.0001) | 1024x1024   |0.2110   |0.4190   | 0.1920  | 0.0040 | 0.0430 | 0.2520  | 0.0399| 0.0434 |0.2599 |92.1923| 0.2660| 0.6092|
-| 1-2      | pvtv2_b0 | Faster R-CNN      | 1x  |12 |lr=0.002   |dict(_delete_=True, policy="step", warmup="linear", warmup_iters=500, warmup_ratio=0.001, step=[8, 11])|dict(_delete_=True, type="SGD", lr=0.002, momentum=0.9, weight_decay=0.0001) | 1024x1024   |0.164  |0.337  | 0.145  |0.000 | 0.031 |0.197  | 0.0406|0.0432 | 0.2779 |91.9211| 0.2630| 0.6248|
-| 1-3      | pvtv2_b5 | Faster R-CNN      | 1x  |11 |lr=0.002   |dict(_delete_=True, policy="step", warmup="linear", warmup_iters=500, warmup_ratio=0.001, step=[8, 11])|dict(_delete_=True, type="SGD", lr=0.002, momentum=0.9, weight_decay=0.0001) | 1024x1024   |0.345 |0.565 |  0.365 |0.011 | 0.080  | 0.409 |0.0547|0.0373 | 0.2471 |92.9791| 0.2188|0.5580|
-
-
-
-## Leader board 결과(제출했을 시)
-| Exp num | Public LB map  | 
-|:-------:|:---------:|
-| 1     | 54.5 | 
-| 2     | 0.598 | 
+| Exp num | Backbone  | RoI Head   | Epoch |Best Epoch |initial lr |Lr schd | Optimizer | Image size| val/bbox_mAP| val/bbox_mAP_50 |  val/bbox_mAP_75 | val/bbox_mAP_s | val/bbox_mAP_m | val/bbox_mAP_l |
+|:-------:|:---------:|:-------:|:-------:|:-------:|:-------:|:--------:|:--------:|:--------------:|:-------:|:--------:|:--------:|:--------:|:--------:|:--------:|
+| 1-1      | swin_t | Faster R-CNN      | 1x  |11 |lr=0.002   |dict(_delete_=True, policy="step", warmup="linear", warmup_iters=500, warmup_ratio=0.001, step=[8, 11])|dict(_delete_=True, type="SGD", lr=0.002, momentum=0.9, weight_decay=0.0001) | 1024x1024   |0.2110   |0.4190   | 0.1920  | 0.0040 | 0.0430 | 0.2520  |
+| 1-2      | pvtv2_b0 | Faster R-CNN      | 1x  |12 |lr=0.002   |dict(_delete_=True, policy="step", warmup="linear", warmup_iters=500, warmup_ratio=0.001, step=[8, 11])|dict(_delete_=True, type="SGD", lr=0.002, momentum=0.9, weight_decay=0.0001) | 1024x1024   |0.164  |0.337  | 0.145  |0.000 | 0.031 |0.197  |
+| 1-3      | pvtv2_b5 | Faster R-CNN      | 1x  |11 |lr=0.002   |dict(_delete_=True, policy="step", warmup="linear", warmup_iters=500, warmup_ratio=0.001, step=[8, 11])|dict(_delete_=True, type="SGD", lr=0.002, momentum=0.9, weight_decay=0.0001) | 1024x1024   |0.345 |0.565 |  0.365 |0.011 | 0.080  | 0.409 |
