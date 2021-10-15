@@ -68,7 +68,6 @@ python tools/inference_with_pseudo_labeling.py [config path]
         ```
         wandb agent ProjectName/sweepID
         ```
-    - train
 
 
 
