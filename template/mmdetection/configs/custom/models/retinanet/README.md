@@ -36,8 +36,6 @@ inference 에 사용할 가장 좋은 checkpoint 기준 score 작성
 - 1-1. bbox_mAP_copypaste: 0.064 0.121 0.059 0.006 0.013 0.077 / test_small
 - 1-2. bbox_mAP_copypaste: 0.135 0.212 0.135 0.000 0.033 0.162 / test_big 
 
-- 결과 원인 분석 : 모르겠음
-
 
 2. mosaic fine tune 
 - 실험 가설 : 데이터 증강과 비슷한 효과로 성능이 오를 것이다.
@@ -45,15 +43,8 @@ inference 에 사용할 가장 좋은 checkpoint 기준 score 작성
 - 결과 : 
 - 2-1. map50은 base와 비교했을 때 오히려 더 떨어짐
 - 2-2.  그냥 모자이크만 한거 - bbox small 이 좋아짐
-- 결과 원인 분석 : .
 
 
 3. base k-fold
 base 모델 Stratified Group k-fold 진행
 3-1 ~ 3-3 : fold1 ~ fold3
-
-## Leader board 결과(제출했을 시)
-| Exp num | Public LB map  | 
-|:-------:|:---------:|
-| 1     | . | 
-| 2     |.| 
