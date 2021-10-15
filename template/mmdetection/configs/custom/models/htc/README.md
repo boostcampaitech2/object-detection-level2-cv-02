@@ -65,7 +65,7 @@ inference 에 사용할 가장 좋은 checkpoint 기준 score 작성
 - 결과 : val에서 성능향상을 보였지만 LB에서 점수가 낮아졌다. 
 - 결과 원인 분석 : 실험 환경이 달라 validation dataset에서 차이가 생겼다.
 
-<span style="color:green">9. backbone pvt-v2-b5에 전체데이터셋에 대한 Mosaic augmentation을 활용한 학습</span>  
+<span style="color:green">9. backbone pvt-v2-b5 Mosaic augmentation을 활용한 전체 데이터셋 학습</span>  
 - 실험 가설 : 마지막 학습으로 val을 나누지 않고 전체 데이터를 학습하여 보다 Robust한 성능 기대
 - 실험 방법 : 성능이 크게 향상됐던 Mosaic augmentation을 활용하여 전체 데이터셋 학습.
 - 결과 : 성능을 확인할 수 없음.
