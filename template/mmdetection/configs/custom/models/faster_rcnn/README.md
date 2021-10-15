@@ -28,7 +28,6 @@ inference 에 사용할 가장 좋은 checkpoint 기준 score 작성
 - 실험 방법 : backbone 변경
 - 결과 : 파라미터가 큰 모델일수록 더 잘됨 - ex ) pvt b0 보다 b5가 더 잘됨
 - 결과 원인 분석 : 모델의 크기가 커질수록 복잡한 표현을 할 수 있기 때문이다
-- 참고 자료 : 참고한 글이나 논문이나 블로그 있으면 link 달기
 
 | Exp num | Backbone  | RoI Head   | Epoch |Best Epoch |initial lr |Lr schd | Optimizer | Image size| val/bbox_mAP| val/bbox_mAP_50 |  val/bbox_mAP_75 | val/bbox_mAP_s | val/bbox_mAP_m | val/bbox_mAP_l |
 |:-------:|:---------:|:-------:|:-------:|:-------:|:-------:|:--------:|:--------:|:--------------:|:-------:|:--------:|:--------:|:--------:|:--------:|:--------:|
