@@ -1,0 +1,12 @@
+{
+    "csvs" : ["cascadercnn_pvt.csv", "yolov5.csv" ,"faster_rcnn_pvtv2_b5_final.csv", "retinanet_r50_base_3fold_final.csv",
+            "htc_swin_b_finetune_mosaic_kfold.csv", "htc_swin_b_384.csv", "htc_swin_b_finetune_mosaic.csv",
+            "hsbfm_with_psudolabilng_8.csv", "double_head_mosaic_final.csv"],
+    "save_path" : "/opt/ml/detection/object-detection-level2-cv-02/template/mmdetection/submission/please5.csv",
+    "ensemble_mode" : "wbf",
+    "weights" : [1,1,1,1,1,1,1,1,1],
+    "iou_thr" : 0.5,
+    "skip_box_thr" : 0.005,
+    "sigma" : 0.1,
+    "img_size" : 1024
+}

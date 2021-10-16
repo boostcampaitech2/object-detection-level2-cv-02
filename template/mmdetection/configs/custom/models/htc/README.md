@@ -9,6 +9,9 @@
 | 5 | swin-l | htc | 15 | 1e-4 | step | AdamW | 0.303 | 0.531 | 0.3 | 0.361 | 0.048 | 0.043 | [config](https://github.com/boostcampaitech2/object-detection-level2-cv-02/blob/master/template/mmdetection/configs/custom/models/htc/htc_swin_l_frozen.py) | | 
 | 6 | swin-b | htc | 15 | 1e-4 | step | AdamW | 0.43 | 0.612 | 0.46 | 0.508 | 0.083 | 0.032 | [config](https://github.com/boostcampaitech2/object-detection-level2-cv-02/blob/master/template/mmdetection/configs/custom/models/htc/htc_swin_b_384.py) | |
 | 7 | swin-b | htc | - | 1e-4 | step | AdamW | 0.420 | 0.606 | 0.453 | 0.495 | 0.120 | 0.008 | [config](https://github.com/boostcampaitech2/object-detection-level2-cv-02/blob/master/template/mmdetection/configs/custom/models/htc/htc_swin_b.py) | [Google](https://drive.google.com/drive/folders/1WYRmSmzs4cQpSX09r8IsPNUpt7M9DJKJ?usp=sharing) |
+| 8 | pvt-v2-b5 | htc | - | 1e-4 | step | AdamW | 0.487 | 0.643 | 0.521 | 0.561 | 0.187 | 0.017 |
+| 9 | pvt-v2-b5 | htc | - | 1e-4 | step | AdamW | - | - | - | - | - | - |
+
 
 ## Experiment
 inference 에 사용할 가장 좋은 checkpoint 기준 score 작성  
@@ -55,6 +58,20 @@ inference 에 사용할 가장 좋은 checkpoint 기준 score 작성
 - 결과 : mVal/mAP50=0.606, test/mAP50=0.629로 LB에서 점수가 약간 상승했다.
 - 결과 원인 분석 : 데이터 수의 증가. fold가 충분하지 못해 val score가 낮게 나온 것으로 추정된다.
 
+
+<span style="color:green">8. backbone pvt-v2-b5로 변경</span>  
+- 실험 가설 : 기존 HTC에서 보다 큰 backbone 모델을 사용하면 성능이 오를것이다.
+- 실험 방법 : backbone 모델을 pvt-v2-b5로 변경
+- 결과 : val에서 성능향상을 보였지만 LB에서 점수가 낮아졌다. 
+- 결과 원인 분석 : 실험 환경이 달라 validation dataset에서 차이가 생겼다.
+
+<span style="color:green">9. backbone pvt-v2-b5 Mosaic augmentation을 활용한 전체 데이터셋 학습</span>  
+- 실험 가설 : 마지막 학습으로 val을 나누지 않고 전체 데이터를 학습하여 보다 Robust한 성능 기대
+- 실험 방법 : 성능이 크게 향상됐던 Mosaic augmentation을 활용하여 전체 데이터셋 학습.
+- 결과 : 성능을 확인할 수 없음.
+- 결과 원인 분석 : 다른 모델들과 ensemble한 결과를 제출했기에 이번 실험의 결과를 따로 확인할 수 없었음.
+
+
 ## Leader board 결과(제출했을 시)
 | Exp num | mAP50  | 
 |:-------:|:---------:|
@@ -65,3 +82,4 @@ inference 에 사용할 가장 좋은 checkpoint 기준 score 작성
 | 5 | |
 | 6 | 0.612 | 
 | 7 | 0.629 |
+| 8 | 0.598 |
